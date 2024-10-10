@@ -4,8 +4,13 @@ output: html_document
 date: "2024-10-08"
 ---
 ```{r}
+start_experiment<-c(4,5,3,6,7)
+end_experiment<-c(9,6,5,4,7)
+my.experiment<-data.frame(start_experiment, end_experiment)
+rownames(my.experiment) <- paste("plant", 1:5)
+
 plants<-paste("plant", 1:5)
-growth<-c(2.25, 1.2, 1.6, -0.6, 0)
+growth<-(my.experiment$end_experiment-my.experiment$start_experiment)/my.experiment$start_experiment*100
 plants<-as.character(plants)
 growth<-as.double(growth)
 growth.list<-list(plants, growth)

@@ -355,8 +355,13 @@ display: none;
 </div>
 
 
-<pre class="r"><code>plants&lt;-paste(&quot;plant&quot;, 1:5)
-growth&lt;-c(2.25, 1.2, 1.6, -0.6, 0)
+<pre class="r"><code>start_experiment&lt;-c(4,5,3,6,7)
+end_experiment&lt;-c(9,6,5,4,7)
+my.experiment&lt;-data.frame(start_experiment, end_experiment)
+rownames(my.experiment) &lt;- paste(&quot;plant&quot;, 1:5)
+
+plants&lt;-paste(&quot;plant&quot;, 1:5)
+growth&lt;-(my.experiment$end_experiment-my.experiment$start_experiment)/my.experiment$start_experiment*100
 plants&lt;-as.character(plants)
 growth&lt;-as.double(growth)
 growth.list&lt;-list(plants, growth)
@@ -366,11 +371,11 @@ print(growth.list)</code></pre>
 ## [1] &quot;plant 1&quot; &quot;plant 2&quot; &quot;plant 3&quot; &quot;plant 4&quot; &quot;plant 5&quot;
 ## 
 ## [[2]]
-## [1]  2.25  1.20  1.60 -0.60  0.00</code></pre>
+## [1] 125.00000  20.00000  66.66667 -33.33333   0.00000</code></pre>
 <pre class="r"><code>str(growth.list)</code></pre>
 <pre><code>## List of 2
 ##  $ : chr [1:5] &quot;plant 1&quot; &quot;plant 2&quot; &quot;plant 3&quot; &quot;plant 4&quot; ...
-##  $ : num [1:5] 2.25 1.2 1.6 -0.6 0</code></pre>
+##  $ : num [1:5] 125 20 66.7 -33.3 0</code></pre>
 <div id="r-markdown" class="section level2">
 <h2>R Markdown</h2>
 <p>This is an R Markdown document. Markdown is a simple formatting
