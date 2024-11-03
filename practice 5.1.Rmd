@@ -1,0 +1,84 @@
+---
+title: "Species Distribution Map"
+output: html_document
+date: "2024-11-03"
+---
+```{r}
+# Install packages
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+install.packages("rgbif")
+install.packages("ggplot2")
+install.packages("sf")
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+
+# Load packages
+library(rgbif)
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+
+## Load world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+library(rgbif)
+
+## Set species name and download data
+species_name <- "Eretmochelys imbricata"
+occ_data <- occ_search(scientificName = species_name, limit = 2000, hasCoordinate = TRUE)
+
+# Check if data was retrieved successfully
+if (is.null(occ_data$data) || nrow(occ_data$data) == 0) {
+  stop("No occurrence data found for the selected species.")
+} else {
+  occ_df <- occ_data$data
+}
+
+library(sf)
+
+## Convert occurrence data to spatial format, if data exists
+if (exists("occ_df") && nrow(occ_df) > 0) {
+  occ_sf <- st_as_sf(occ_df, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326)
+} else {
+  stop("Occurrence data could not be converted to a spatial format.")
+}
+
+library(ggplot2)
+
+### Create the map plot
+ggplot(data = world) +
+  geom_sf(fill = "white", color = "gray50") +
+  geom_sf(data = occ_sf, aes(color = st_coordinates(occ_sf)[,2]), size = 0.5, alpha = 0.7) +
+  scale_color_gradient(low = "brown", high = "cyan") + 
+  coord_sf(crs = "+proj=robin") + 
+  labs(title = paste("distribution of Eretmochelys imbricata (", species_name, ") ", sep = ""),
+       x = "longtitude", y = "latitude", color = "latitude") +
+  theme_minimal()
+
+
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
