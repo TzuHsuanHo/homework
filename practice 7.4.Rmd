@@ -1,0 +1,81 @@
+---
+title: "practice 7.4"
+output: html_document
+date: "2024-11-17"
+---
+```{r}
+
+url <- "https://www.dipintothereef.com/uploads/3/7/3/5/37359245/rairuoho.txt"
+
+
+rairuoho_data <- read.table(url, header = TRUE, sep = "\t")
+
+
+head(rairuoho_data)
+
+
+
+pearson.test <- function(x, y) {
+
+  if (!is.numeric(x) | !is.numeric(y)) stop("Both inputs must be numeric")
+  
+  n <- length(x)  
+  r <- cor(x, y)  
+  df <- n - 2    
+
+  t_stat <- r * sqrt(df / (1 - r^2))
+  
+ 
+  p_value <- 2 * pt(-abs(t_stat), df = df)
+  
+  return(list(correlation = r, t_statistic = t_stat, p_value = p_value, df = df))
+}
+
+
+rairuoho_data$treatment <- as.factor(rairuoho_data$treatment)
+
+
+nutrient_data <- subset(rairuoho_data, treatment == "nutrient")
+water_data <- subset(rairuoho_data, treatment == "water")
+
+
+
+
+
+cat("Nutrient treatment:\n")
+nutrient_day3_day4 <- pearson.test(nutrient_data$day3, nutrient_data$day4)
+nutrient_day3_day8 <- pearson.test(nutrient_data$day3, nutrient_data$day8)
+print(nutrient_day3_day4)
+print(nutrient_day3_day8)
+
+cat("Water treatment:\n")
+water_day3_day4 <- pearson.test(water_data$day3, water_data$day4)
+water_day3_day8 <- pearson.test(water_data$day3, water_data$day8)
+print(water_day3_day4)
+print(water_day3_day8)
+
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
